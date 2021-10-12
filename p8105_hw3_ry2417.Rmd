@@ -5,7 +5,7 @@ date: "10/12/2021"
 output: github_document
 ---
 
-load the `tidyverse` package and set global options of code chunk and figure
+load `tidyverse` package and set global options of code chunk and figure
 
 ```{r, message = FALSE}
 library(tidyverse)
@@ -28,5 +28,12 @@ options(
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
+
+load `p8105.datasets` package
+
+```{r}
+library(p8105.datasets)
+```
+
 
 
