@@ -207,5 +207,23 @@ mean_hour_of_day_dow <-
   knitr::kable()
 ```
 
+`instacart`data contains `r nrow(p1_df)` observations of  `r ncol(p1_df)` 
+variables. The variables name are ``r names(p1_df)``. There are `r num_user` 
+users, `r num_order` orders, `r num_product` 
+different products, `r num_dptm` categories of products and `r num_aisle` aisles
+. The categories of products include `r some_dptm`. Most of items were order 
+aisles `most_item_aisle`. Here are some examples of observations `r example_obs`
+The products that has most reordering users were `r most_reorder_product`. 
+Here is the table of the most popular products and the number of times being 
+ordered `r most_popular_product`
+The three most popular items in each of the 
+aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits” are
+listed here `r most_popular_product_by_aisle`
+The most popular items in some departments are shown below 
+`r most_popular_product_by_dptm`
+
+The day of the week when most orders were placed is `r most_order_dow`. The 
+table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice 
+Cream are ordered on each day of the week is `r mean_hour_of_day_dow`
 
 
