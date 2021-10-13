@@ -137,7 +137,7 @@ most_reorder_product <-
 Some tables generated from data 
 
 ```{r}
-example_obs <-
+example_obs_p1 <-
   p1_df %>% 
   head(10) %>% 
   select(user_id, 
@@ -222,7 +222,8 @@ variables. The variables name are ``r names(p1_df)``. There are `r num_user`
 users, `r num_order` orders, `r num_product` 
 different products, `r num_dptm` categories of products and `r num_aisle` aisles
 . The categories of products include `r some_dptm`. Most of items were order 
-aisles `most_item_aisle`. Here are some examples of observations `r example_obs`
+aisles `most_item_aisle`. Here are some examples of observations 
+`r example_obs_p1`
 The products that has most reordering users were `r most_reorder_product`. 
 Here is the table of the most popular products and the number of times being 
 ordered `r most_popular_product`
@@ -233,7 +234,7 @@ The most popular items in some departments are shown below
 `r most_popular_product_by_dptm`
 
 The day of the week when most orders were placed is `r most_order_dow`. The 
-average days since prior order among users are `r average_prior_order_day` days.
+average days since prior order per user are `r average_prior_order_day` days.
 The table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice 
 Cream are ordered on each day of the week is `r mean_hour_of_day_dow`
 
@@ -369,8 +370,15 @@ p2_df %>%
 import and clean data set for problem 3 from data `accel_data`
 ```{r}
 p3_df <- 
-  read_csv("data/accel_data.csv") %>% 
+  read_csv(
+    "data/accel_data.csv",
+    col_types = cols(`day_id` = col_factor(ordered = TRUE))
+  ) %>% 
   janitor::clean_names() %>% 
+  rename(
+    day_of_week = day,
+    day = day_id
+  ) %>% 
   pivot_longer( 
     starts_with("activity_"),
     names_to = "minute_of_day",
@@ -382,4 +390,27 @@ p3_df <-
     week_vs_weekend = ifelse(day %in% c("Sunday", "Saturday"), "weekend", "week")
   )
 ```
+
+Some numerical descriptions of data
+
+```{r}
+average_activity <-
+  p3_df %>% 
+  pull(activity_in_minute) %>% 
+  mean()
+
+example_obs_p3 <-
+  p3_df %>% 
+  head(10) %>% 
+  knitr::kable()
+```
+
+There are `r nrow(p3_df)` observations of `r ncol(p3_df)` variables in data.
+Each observation is the observation of one minute collected on a 63 year-old male.
+The variables include `r names(p3_df)`. The average activity count per minute is `r average_activity`. Here is the examples of some observations `r example_obs_p3`
+
+
+
+
+
 
