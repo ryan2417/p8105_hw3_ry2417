@@ -74,6 +74,16 @@ num_product <-
   distinct() %>% 
   nrow()
 
+average_prior_order_day <-
+  p1_df %>% 
+  group_by(user_id) %>% 
+  summarise(
+    prior_order_day = sum(days_since_prior_order)/n()
+  ) %>% 
+  pull(prior_order_day) %>% 
+  mean() %>% 
+  round()
+
 most_order_dow <-
   p1_df %>% 
   group_by(order_dow) %>% 
@@ -223,7 +233,8 @@ The most popular items in some departments are shown below
 `r most_popular_product_by_dptm`
 
 The day of the week when most orders were placed is `r most_order_dow`. The 
-table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice 
+average days since prior order among users are `r average_prior_order_day` days.
+The table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice 
 Cream are ordered on each day of the week is `r mean_hour_of_day_dow`
 
 Make a plot that shows the number of items ordered in each aisle, limiting this 
@@ -344,7 +355,7 @@ p2_df %>%
   labs(y = "density of data value",
        x = "data value",
     title = "Distribution of Data Value for Reponse among New York State in 2006 vs. 2010",
-    caption = "Data from BRFSS of p8105_datasets package ")+
+    caption = "Data from BRFSS of p8105_datasets package ") +
   theme(
     plot.title = element_text(size = 11),
     plot.caption = element_text(size = 5),
