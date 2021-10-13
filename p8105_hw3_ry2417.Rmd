@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,
   fig.width = 6,
-  fig.asp = .6,
+  fig.asp = .7,
   out.width = "90%"
 )
 
@@ -226,4 +226,28 @@ The day of the week when most orders were placed is `r most_order_dow`. The
 table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice 
 Cream are ordered on each day of the week is `r mean_hour_of_day_dow`
 
+Make a plot that shows the number of items ordered in each aisle, limiting this 
+to aisles with more than 10000 items ordered.
+
+```{r problem_1_plot}
+p1_df %>% 
+  group_by(aisle) %>% 
+  summarise(
+    num_item = n()
+  ) %>% 
+  filter(num_item >= 10000) %>% 
+  ggplot(aes(x = aisle, y = num_item)) +
+  geom_bar(stat = "identity", alpha = 0.5) +
+  labs(x = "aisle name",
+       y = "number of items ordered",
+       title = "The Number of Items Ordered in Each Aisle(>= 10000)",
+       caption = "Data from instacart of p8105_datasets package ") +
+  theme(
+    axis.text.x = element_text(angle = 90, size = 6),
+    axis.text.y = element_text(size = 6),
+    axis.title = element_text(size = 7),
+    plot.title = element_text(size = 7),
+    plot.caption = element_text(size = 4)
+  )
+```
 
