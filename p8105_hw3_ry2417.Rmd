@@ -36,4 +36,95 @@ library(p8105.datasets)
 ```
 
 
+## Problem 1
+
+load `instacart` data and tidy the data to data frame of problem 1
+```{r}
+data("instacart")
+p1_df <- 
+  instacart %>% 
+  mutate(
+    order_dow = lubridate::wday(order_dow + 1,
+                                label = TRUE,
+                                abbr = FALSE
+                                )
+  ) %>% 
+  arrange(user_id, order_number) %>% 
+  relocate(user_id, order_number, product_name, aisle, department, everything())
+```
+
+Some numerical summary of data
+
+```{r}
+num_user <-
+  p1_df %>% 
+  select(user_id) %>% 
+  distinct() %>% 
+  nrow()
+
+num_order <-
+  p1_df %>% 
+  select(order_id) %>% 
+  distinct() %>% 
+  nrow()
+
+num_product <-
+  p1_df %>% 
+  select(product_name) %>% 
+  distinct() %>% 
+  nrow()
+
+most_order_dow <-
+  p1_df %>% 
+  group_by(order_dow) %>% 
+  distinct(order_id) %>% 
+  summarise(
+    num_order = n()
+  ) %>% 
+  filter(num_order == max(num_order)) %>% 
+  pull(order_dow)
+  
+num_dptm <-
+  p1_df %>% 
+  select(department) %>% 
+  distinct() %>% 
+  nrow()
+
+some_dptm <- 
+  p1_df %>% 
+  select(department) %>% 
+  distinct() %>% 
+  head(10) %>% 
+  pull()
+
+num_aisle <- 
+  p1_df %>% 
+  select(aisle) %>% 
+  distinct() %>% 
+  nrow()
+  
+most_item_aisle <- 
+  p1_df %>% 
+  group_by(aisle) %>% 
+  summarise(
+    num_item = n()
+  ) %>% 
+  arrange(desc(num_item)) %>% 
+  head(5) %>% 
+  pull(aisle)
+
+most_reorder_product <-
+  p1_df %>% 
+  group_by(product_name) %>% 
+  summarise(
+    num_reorder = sum(reordered)
+  ) %>% 
+  arrange(desc(num_reorder)) %>% 
+  head(10) %>% 
+  pull(product_name)
+```
+
+
+
+
 
