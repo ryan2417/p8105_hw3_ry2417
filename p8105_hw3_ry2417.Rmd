@@ -362,3 +362,24 @@ p2_df %>%
     legend.key.size = unit(0.4, "cm")
   )
 ```
+
+
+## Problem 3
+
+import and clean data set for problem 3 from data `accel_data`
+```{r}
+p3_df <- 
+  read_csv("data/accel_data.csv") %>% 
+  janitor::clean_names() %>% 
+  pivot_longer( 
+    starts_with("activity_"),
+    names_to = "minute_of_day",
+    names_prefix = "activity_",
+    values_to = "activity_in_minute"
+  ) %>% 
+  mutate(
+    minute_of_day = factor(minute_of_day, ordered = TRUE),
+    week_vs_weekend = ifelse(day %in% c("Sunday", "Saturday"), "weekend", "week")
+  )
+```
+
