@@ -21,12 +21,12 @@ knitr::opts_chunk$set(
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 
 options(
-  ggplot2.continuous.colour = "viridis",
-  ggplot2.continuous.fill = "viridis"
+  ggplot2.continuous.colour = "turbo",
+  ggplot2.continuous.fill = "turbo"
 )
 
-scale_colour_discrete = scale_colour_viridis_d
-scale_fill_discrete = scale_fill_viridis_d
+scale_colour_discrete = scale_colour_viridis_d(option = "turbo")
+scale_fill_discrete = scale_fill_viridis_d(option = "turbo")
 ```
 
 load `p8105.datasets` package
@@ -371,8 +371,7 @@ import and clean data set for problem 3 from data `accel_data`
 ```{r}
 p3_df <- 
   read_csv(
-    "data/accel_data.csv",
-    col_types = cols(`day_id` = col_factor(ordered = TRUE))
+    "data/accel_data.csv"
   ) %>% 
   janitor::clean_names() %>% 
   rename(
@@ -386,7 +385,7 @@ p3_df <-
     values_to = "activity_in_minute"
   ) %>% 
   mutate(
-    minute_of_day = factor(minute_of_day, ordered = TRUE),
+    minute_of_day = as.numeric(minute_of_day),
     week_vs_weekend = ifelse(day %in% c("Sunday", "Saturday"), "weekend", "week")
   )
 ```
@@ -410,7 +409,54 @@ Each observation is the observation of one minute collected on a 63 year-old mal
 The variables include `r names(p3_df)`. The average activity count per minute is `r average_activity`. Here is the examples of some observations `r example_obs_p3`
 
 
+create a table showing a total activity variable for each day across minutes
 
+```{r}
+p3_df %>% 
+  group_by(day) %>% 
+  summarise(
+    activity_in_day = sum(activity_in_minute)
+  ) %>% 
+  knitr::kable()
+```
 
+Day2, day24 and day31 have the total activities that much lower than other days.\
 
+Make a single-panel plot that shows the 24-hour activity time courses for each day and use color to indicate day of the week.
+
+```{r}
+p3_df %>% 
+  mutate(
+    hour_of_day = minute_of_day/60
+  ) %>% 
+  ggplot(aes(x = hour_of_day, 
+             y = activity_in_minute, 
+             group = day, 
+             color = day_of_week)) +
+  geom_point(alpha = .1) +
+  geom_line() +
+  labs(y = "activity count",
+       x = "hour of day",
+    title = "24-hour activity for each day ",
+    caption = "Data from accel_data",
+    colour = "day of week") +
+  scale_x_continuous(
+    breaks = 0:24
+  ) +
+  theme(
+    axis.text.x = element_text(size = 7),
+    axis.text.y = element_text(size = 7),
+    axis.title = element_text(size = 9),
+    plot.title = element_text(size = 12),
+    plot.caption = element_text(size = 5),
+    legend.title = element_text(size = 8),
+    legend.text = element_text(size = 7),
+    legend.key.size = unit(0.2, "cm")
+  ) +
+  guides(color = guide_legend(nrow = 1))
+```
+
+From the plot, we can see that activity is extremely high during 7pm to 10pm and 
+moderately high between 6am to 12pm and 4pm to 5pm.
+The overall activity is more stable and lower on Tuesday than other days of week. There are high activity in the afternoon and evening on Friday and Saturday. The activity of Sunday is concentrated between 11am to 12 pm. 
 
