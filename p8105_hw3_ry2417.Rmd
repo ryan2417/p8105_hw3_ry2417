@@ -12,10 +12,7 @@ library(tidyverse)
 
 knitr::opts_chunk$set(
   warning = FALSE,
-  message = FALSE,
-  fig.width = 6,
-  fig.asp = .7,
-  out.width = "90%"
+  message = FALSE
 )
 
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
@@ -173,13 +170,14 @@ most_popular_product_by_dptm <-
     product_rank = min_rank(desc(num_order))
   ) %>% 
   select(-num_order) %>% 
-  filter(product_rank < 6) %>% 
-  head(40) %>% 
+  filter(product_rank < 4) %>% 
+  head(18) %>% 
+  arrange(product_rank) %>% 
   pivot_wider(
-    names_from = department,
+    names_from = product_rank,
+    names_prefix = "rank_",
     values_from = product_name
   ) %>% 
-  arrange(product_rank) %>% 
   knitr::kable()
 
 most_popular_product_by_aisle <-
@@ -195,12 +193,7 @@ most_popular_product_by_aisle <-
     product_rank = min_rank(desc(num_times))
   ) %>% 
   filter(product_rank < 4) %>% 
-  arrange(product_rank) %>% 
-  pivot_wider(
-    names_from = product_rank,
-    values_from = c(product_name, num_times),
-    names_glue = "Rank_{product_rank}_{.value}"
-  ) %>% 
+  arrange(aisle, product_rank) %>% 
   knitr::kable()
 
 mean_hour_of_day_dow <-
@@ -234,7 +227,7 @@ The most popular items in some departments are shown below
 `r most_popular_product_by_dptm`
 
 The day of the week when most orders were placed is `r most_order_dow`. The 
-average days since prior order per user are `r average_prior_order_day` days.
+average days since prior order per user are `r average_prior_order_day` days.\
 The table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice 
 Cream are ordered on each day of the week is `r mean_hour_of_day_dow`
 
@@ -255,12 +248,13 @@ p1_df %>%
        title = "The Number of Items Ordered in Each Aisle(>= 10000)",
        caption = "Data from instacart of p8105_datasets package ") +
   theme(
-    axis.text.x = element_text(angle = 90, size = 6),
-    axis.text.y = element_text(size = 6),
-    axis.title = element_text(size = 7),
-    plot.title = element_text(size = 7),
-    plot.caption = element_text(size = 4)
-  )
+    axis.text.x = element_text(size = 8),
+    axis.text.y = element_text(size = 8),
+    axis.title = element_text(size = 10),
+    plot.title = element_text(size = 10),
+    plot.caption = element_text(size = 5)
+  ) +
+  coord_flip()
 ```
 
 
